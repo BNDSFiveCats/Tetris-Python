@@ -1,5 +1,5 @@
 # Tetris-Python
-simplified Tetris in Pytho
+simplified Tetris in Python
 
 简易俄罗斯方块
 
