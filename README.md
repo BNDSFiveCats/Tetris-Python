@@ -16,3 +16,5 @@ simplified Tetris in Python
 - Delete 是暂停(懒得改)
 
 - Esc 也可以关闭窗口(暂停期间无法关闭窗口)
+
+- 允许长摁
