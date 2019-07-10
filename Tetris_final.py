@@ -123,7 +123,7 @@ def bomb(bas_stay):
                 bas[i][n] = 0
             break
     if i_b != "":
-        print("delet")
+        # print("delet")
         for n in range(0,i):
             n = i-n
             bas[n] = deepcopy(bas[n-1])
@@ -150,6 +150,11 @@ FPS =60
 xsi = 0
 ysi = 0
 score = 0
+longtouch = 0.08 #长摁时块移动的周期
+timeforkey_UP= -1
+timeforkey_DOWN= -1
+timeforkey_RIGHT= -1
+timeforkey_LEFT= -1
 falljug = False
 Timejug = False
 deadjug = False
@@ -241,39 +246,95 @@ while mainloop:
 
     pygame.display.set_caption("Tetris V 0.2.2 by Yang H. Xu Y.C. Wang Z.Y.  Frame rate %.2f frames per second." % (clock.get_fps()))
 
+    '''
+    print(timeforkey_UP,
+    timeforkey_DOWN,
+    timeforkey_RIGHT,
+    timeforkey_LEFT)
+    '''
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             mainloop = False # pygame window closed by user
             print("Your score is",score)
         elif event.type == pygame.KEYDOWN:
+            
             if event.key == pygame.K_ESCAPE:
                 mainloop = False # user pressed ESC
                 print("Your score is",score)
+
             if event.key == pygame.K_UP:
+                timeforkey_UP = deepcopy(playtime) +0.2
                 if moveblock[0] != 0:
                     moveblock[1] = (moveblock[1] +1) %4
                     continuejug = True
-                pass
+                # pass
             if event.key == pygame.K_DOWN:
+                timeforkey_DOWN = deepcopy(playtime) +0.2
                 if moveblock[0] != 0:
                     moveblock[1] = (moveblock[1] +3) %4
                     continuejug = True
-                pass
+                # pass
             if event.key == pygame.K_RIGHT:
+                timeforkey_RIGHT = deepcopy(playtime) +0.2
                 moveblock[3] = [moveblock[3][0]+1,moveblock[3][1]]
                 continuejug = True
-                pass
+                # pass
             if event.key == pygame.K_LEFT:
+                timeforkey_LEFT = deepcopy(playtime) +0.2 
                 moveblock[3] = [moveblock[3][0]-1,moveblock[3][1]]
                 continuejug = True
-                pass
+                # pass
+
             if event.key == pygame.K_SPACE:
                 falljug = True
                 pass
             if event.key == pygame.K_DELETE:
                 stopjug = True
                 pass
+        elif event.type == pygame.KEYUP:
+            # print("bomb")
+            if event.key == pygame.K_UP:
+                timeforkey_UP = -1
+                # pass
+            if event.key == pygame.K_DOWN:
+                timeforkey_DOWN = -1
+                # pass
+            if event.key == pygame.K_RIGHT:
+                timeforkey_RIGHT = -1
+                # pass
+            if event.key == pygame.K_LEFT:
+                timeforkey_LEFT = -1
+                # pass
+            pass
     
+    if timeforkey_UP != -1:
+        if (playtime - timeforkey_UP)>=0.1:
+            if moveblock[0] != 0:
+                moveblock[1] = (moveblock[1] +1) %4
+                continuejug = True
+            timeforkey_UP += 0.1
+        pass
+    if timeforkey_DOWN != -1:
+        if (playtime - timeforkey_DOWN)>=0.1:
+            if moveblock[0] != 0:
+                moveblock[1] = (moveblock[1] +3) %4
+                continuejug = True
+            timeforkey_DOWN += 0.1
+        pass
+    if timeforkey_RIGHT != -1:
+        if (playtime - timeforkey_RIGHT)>=longtouch:
+            moveblock[3] = [moveblock[3][0]+1,moveblock[3][1]]
+            continuejug = True
+            timeforkey_RIGHT += longtouch
+        pass
+    if timeforkey_LEFT != -1:
+        if (playtime - timeforkey_LEFT)>=longtouch:
+            moveblock[3] = [moveblock[3][0]-1,moveblock[3][1]]
+            continuejug = True
+            timeforkey_LEFT += longtouch
+        pass    
+
     if playtimejug:
         playtime = deepcopy(playtime_b) 
         dtime = deepcopy(dtime_b)
